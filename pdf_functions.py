@@ -4,6 +4,21 @@ import PyPDF2
 import os
 import re
 
+
+def ascii_to_int(text):
+    """ Helper function: Converts numeric strings to integers, non-numeric remain unchanged. """
+    return int(text) if text.isdigit() else text
+
+def natural_keys(text):
+    """ 
+    Helper function: 
+    - Splits a string into a list of integers and non-integer substrings. 
+    - Used to create lists of ints and strings. 
+    - The `key=` option in `.sort()` method then comapres the relevant lists in list-lexicographical order. 
+    """
+    return [ascii_to_int(c) for c in re.split(r'(\d+)', text)]
+
+
 def add_bookmarks(pdf_path, outlinetext_path):
     """ Adds bookmarks to a PDF based on an outline text file. """
     with open(pdf_path, 'rb') as pdf_file, open(outlinetext_path, 'r') as outlinetext_file:
@@ -45,21 +60,21 @@ def add_bookmarks(pdf_path, outlinetext_path):
     return output_pdf_path
 
 def combine_pdfs(folder_path):
+    """ Combines all PDF files in a folder into one, sorting them naturally. """
     # obtain list of pdfs
     pdf_filepaths = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.endswith('.pdf')]
-    pdf_filepaths.sort() # this will sort them in alphanumeric order as follows: [A-Z], \d, [a-z] (problem with numbered pdfs)
+    pdf_filepaths.sort(key=natural_keys)  # sort files by integers in titles
 
     # merge; add titles as bookmarks
     merger = PyPDF2.PdfMerger()
     for pdf in pdf_filepaths:
         with open(pdf, "rb") as file:
             filename, _ = os.path.splitext(os.path.basename(file.name))
-            merger.append(file, import_outline=False, outline_item=filename) # outline_item stands for bookmarks
+            merger.append(file, import_outline=False, outline_item=filename)  # add bookmarks based on filenames
 
     output_pdf_path = os.path.join(folder_path, 'merged_file.pdf')
     merger.write(output_pdf_path)
     merger.close()
-
     return output_pdf_path
 
 
