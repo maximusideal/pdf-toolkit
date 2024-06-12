@@ -1,6 +1,6 @@
-# See https://pypdf2.readthedocs.io/en/3.0.0/user/merging-pdfs.html
+# See https://pypdf.readthedocs.io/en/3.0.0/user/merging-pdfs.html
 # import=
-import PyPDF2
+import pypdf
 import os
 import re
 
@@ -23,9 +23,9 @@ def add_bookmarks(pdf_path, outlinetext_path):
     """ Adds bookmarks to a PDF based on an outline text file. """
     with open(pdf_path, 'rb') as pdf_file, open(outlinetext_path, 'r') as outlinetext_file:
 
-        # read pdf file in PyPDF2; write to new one in PyPDF2
-        reader = PyPDF2.PdfReader(pdf_file)
-        writer = PyPDF2.PdfWriter()
+        # read pdf file in pypdf; write to new one in pypdf
+        reader = pypdf.PdfReader(pdf_file)
+        writer = pypdf.PdfWriter()
 
         # copy the pdf and add bookmarks
         for page in reader.pages:
@@ -66,7 +66,7 @@ def combine_pdfs(folder_path):
     pdf_filepaths.sort(key=natural_keys)  # sort files by integers in titles
 
     # merge; add titles as bookmarks
-    merger = PyPDF2.PdfMerger()
+    merger = pypdf.PdfMerger()
     for pdf in pdf_filepaths:
         with open(pdf, "rb") as file:
             filename, _ = os.path.splitext(os.path.basename(file.name))

@@ -2,11 +2,10 @@
 # import
 import tkinter as tk
 from tkinter import ttk, filedialog
-import PyPDF2
-import os
-import re
 from pdf_functions import add_bookmarks, combine_pdfs
 
+
+# functions
 def browse_dir(entry, need_folder=False):
     """ Opens dialog box to select a file or folder; updates the entry with the chosen path. """
     if need_folder: dir = filedialog.askdirectory()
