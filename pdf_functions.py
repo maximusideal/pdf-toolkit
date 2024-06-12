@@ -1,10 +1,13 @@
-# See https://pypdf.readthedocs.io/en/3.0.0/user/merging-pdfs.html
-# import=
+""" See https://pypdf.readthedocs.io/en/3.0.0/user/merging-pdfs.html """
+
+
+# import
 import pypdf
 import os
 import re
 
 
+# helper functions
 def ascii_to_int(text):
     """ Helper function: Converts numeric strings to integers, non-numeric remain unchanged. """
     return int(text) if text.isdigit() else text
@@ -19,6 +22,7 @@ def natural_keys(text):
     return [ascii_to_int(c) for c in re.split(r'(\d+)', text)]
 
 
+# main functions
 def add_bookmarks(pdf_path, outlinetext_path):
     """ Adds bookmarks to a PDF based on an outline text file. """
     with open(pdf_path, 'rb') as pdf_file, open(outlinetext_path, 'r') as outlinetext_file:
