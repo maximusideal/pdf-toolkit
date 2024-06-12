@@ -7,11 +7,13 @@ import os
 import re
 from pdf_functions import add_bookmarks, combine_pdfs
 
-def browse_file(entry):
-    """ Opens dialog box to select a file; updates the entry with the chosen path. """
-    filepath = filedialog.askopenfilename()  # choose file path
+def browse_dir(entry, need_folder=False):
+    """ Opens dialog box to select a file or folder; updates the entry with the chosen path. """
+    if need_folder: dir = filedialog.askdirectory()
+    else: dir = filedialog.askopenfilename()
+
     entry.delete(0, tk.END)  # remove current entry
-    entry.insert(0, filepath)  # insert the chosen file path
+    entry.insert(0, dir)  # insert the chosen file path
 
 def run_add_bookmarks(pdf_entry, outlinetext_entry, status_label):
     pdf_path = pdf_entry.get()
@@ -57,10 +59,10 @@ outlinetext_entry = tk.Entry(tab1, width=75)
 outlinetext_entry.grid(row=1, column=1, padx=20, pady=10)
 
 # buttons
-pdf_button = tk.Button(tab1, text="Find PDF", command=lambda: browse_file(pdf_entry))
+pdf_button = tk.Button(tab1, text="Find PDF", command=lambda: browse_dir(pdf_entry))
 pdf_button.grid(row=0, column=2, padx=10, pady=10)
 
-outlinetext_button = tk.Button(tab1, text="Find Text File", command=lambda: browse_file(outlinetext_entry))
+outlinetext_button = tk.Button(tab1, text="Find Text File", command=lambda: browse_dir(outlinetext_entry))
 outlinetext_button.grid(row=1, column=2, padx=10, pady=10)
 
 run_button = tk.Button(tab1, text="Add Bookmarks", command=lambda: run_add_bookmarks(pdf_entry, outlinetext_entry, status_label))
@@ -76,7 +78,7 @@ folder_entry = tk.Entry(tab2, width=75)
 folder_entry.grid(row=0, column=1, padx=20, pady=10)
 
 # buttons
-folder_button = tk.Button(tab2, text="Browse Folder", command=lambda: browse_file(folder_entry))
+folder_button = tk.Button(tab2, text="Browse Folder", command=lambda: browse_dir(folder_entry, need_folder=True))
 folder_button.grid(row=0, column=2, padx=10, pady=10)
 
 combine_button = tk.Button(tab2, text="Combine PDFs", command=lambda: run_combine_pdfs(folder_entry, status_label))
